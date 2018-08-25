@@ -14,7 +14,6 @@ public class EnemyGenerator : MonoBehaviour
     [SerializeField, Range(1, 10)]
     private int _maxGenerations = 5;
     private int _numGeneration = 0;
-    [SerializeField]
     private List<EnemySpace> _enemyList;
 
     public int NumGeneration
@@ -71,8 +70,9 @@ public class EnemyGenerator : MonoBehaviour
     {
         list.Sort(); // fitness function
         list.RemoveRange(0, lambda);
+        list = Shuffle(list);
         int poolSize = mu + lambda;
-        bool isRandom = mu < lambda;
+        bool isRandom = lambda > mu;
         List<EnemySpace> wave = new List<EnemySpace>(poolSize);
         EnemySpace e;
         EnemyTemplate t;

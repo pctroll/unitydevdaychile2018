@@ -60,7 +60,6 @@ public class EnemyTemplate
     public Sprite sprite;
     public float initialHealth;
     public float initialSpeed;
-    public float initialScale;
 
     public override string ToString()
     {

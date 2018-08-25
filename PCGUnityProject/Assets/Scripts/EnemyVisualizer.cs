@@ -19,8 +19,9 @@ public class EnemyVisualizer : MonoBehaviour
         float x, y;
         for (i = 0, x = 0.1f, y = 0.25f; i < enemyList.Count; i++, x += 0.07f)
         {
+            enemyList[i].transform.parent = transform;
             enemyList[i].Revive();
-            if (x >= 0.8f)
+            if (x >= 0.96f)
             {
                 x = 0.07f;
                 y += 0.15f;

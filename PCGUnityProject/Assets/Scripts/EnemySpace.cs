@@ -41,7 +41,7 @@ public class EnemySpace : MonoBehaviour, System.IComparable<EnemySpace>
     {
         //Debug.Log(template);
         _renderer = GetComponent<SpriteRenderer>();
-        _collider = GetComponent<BoxCollider2D>();
+        //_collider = GetComponent<BoxCollider2D>();
 
         _template = template;
         _renderer.sprite = template.sprite;
