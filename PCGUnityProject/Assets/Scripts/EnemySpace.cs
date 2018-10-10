@@ -54,7 +54,7 @@ public class EnemySpace : MonoBehaviour, System.IComparable<EnemySpace>
     /// </summary>
     public void Mutate()
     {
-
+        transform.localScale = new Vector3(_health, _health, 1f);
     }
 
     public void Revive()

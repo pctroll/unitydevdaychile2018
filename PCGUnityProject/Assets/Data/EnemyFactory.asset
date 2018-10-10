@@ -16,12 +16,12 @@ MonoBehaviour:
   - sprite: {fileID: 21300000, guid: 68be5bad965e59a47ab728c8529ffdba, type: 3}
     initialHealth: 5
     initialSpeed: 1
-    initialScale: 0
   - sprite: {fileID: 21300000, guid: a56b72f266c176c47a75fa3ab399f934, type: 3}
     initialHealth: 8
     initialSpeed: 2
-    initialScale: 0
   - sprite: {fileID: 21300000, guid: 5e295a7eac4c80643ab872d7247b78d9, type: 3}
     initialHealth: 4
     initialSpeed: 1
-    initialScale: 0
+  - sprite: {fileID: 21300000, guid: e744251d2140eb849ba1ddaca0c0880c, type: 3}
+    initialHealth: 4
+    initialSpeed: 1

@@ -12,6 +12,9 @@ public class EnemyVisualizer : MonoBehaviour
     private Text _txtNumGen;
     private Camera _camera;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public void OnClickNewGen()
     {
         List<EnemySpace> enemyList = _generator.CreateNewWave();
@@ -21,7 +24,7 @@ public class EnemyVisualizer : MonoBehaviour
         {
             enemyList[i].transform.parent = transform;
             enemyList[i].Revive();
-            if (x >= 0.96f)
+            if (x >= 0.9f)
             {
                 x = 0.07f;
                 y += 0.15f;
@@ -46,9 +49,6 @@ public class EnemyVisualizer : MonoBehaviour
 
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     private void OnGUI()
     {
         _txtNumGen.text = _generator.NumGeneration.ToString();
