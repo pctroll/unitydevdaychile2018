@@ -22,8 +22,8 @@ public class DungeonVisualizer : MonoBehaviour
         Vector3 cellSize = _cellStore.prefab.GetComponent<SpriteRenderer>().bounds.size;
         GameObject obj;
         SpriteRenderer renderer;
-        int gridWidth = grid.GetLength(0);
-        int gridHeight = grid.GetLength(1);
+        int gridWidth = grid.GetLength(1);
+        int gridHeight = grid.GetLength(0);
         int i, j, counter = 0;
         for (i = 0; i < gridHeight; i++)
         {
@@ -51,7 +51,10 @@ public class DungeonVisualizer : MonoBehaviour
         if (cellList == null || cellList.Count == 0)
             return;
         foreach (GameObject obj in cellList)
+        {
+            obj.transform.parent = null;
             Destroy(obj);
+        }
         cellList.Clear();
     }
 

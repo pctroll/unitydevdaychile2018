@@ -28,7 +28,8 @@ public class BSPNode
         {
             Debug.Log("areas are NULL | Creating block...");
             block = CreateBlock(area);
-            Debug.Log(block);
+            //Debug.Log(block);
+            //root.BlockToGrid(this);
             root.BlockToGrid(block);
             return;
         }

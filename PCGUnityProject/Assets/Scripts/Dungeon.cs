@@ -30,7 +30,7 @@ public class Dungeon : MonoBehaviour
 
     public void Init()
     {
-        area = new Rect(0f, 0f, maxWidth , maxHeight);
+        area = new Rect(0f, 0f, maxWidth, maxHeight);
         grid = new int[maxHeight, maxWidth];
         //leaves.Clear();
         tree.Clear();
@@ -39,20 +39,26 @@ public class Dungeon : MonoBehaviour
         root = new BSPNode(area, this);
     }
 
+    public void BlockToGrid(BSPNode node)
+    {
+        print("-------------");
+        print("BlockToGrid");
+        print("area");
+        print(node.area);
+        print("block");
+        print(node.block);
+        BlockToGrid(node.block);
+    }
+
     public void BlockToGrid(Rect block)
     {
-        print("BlockToGrid");
-        print(block);
-        int i, j, width, height;
-        width = (int)(block.width + block.x);
-        height = (int)(block.height + block.y);
-        print("i " + (int)block.y);
-        print("j " + (int)block.x);
-        print("w " + width);
-        print("h " + height);
-        for (i = (int)block.y; i < height - 1; i++)
+        int i, j, w, h;
+        w = (int)(block.width + block.x);
+        h = (int)(block.height + block.y);
+        //print("i:" + (int)block.y + " j:" + (int)block.x + " w:" + w + " h:" + h);
+        for (i = (int)block.y; i < h - 1; i++)
         {
-            for (j = (int)block.x; j < width - 1; j++)
+            for (j = (int)block.x; j < w - 1; j++)
             {
                 grid[i, j] = 1;
             }
@@ -86,37 +92,42 @@ public class Dungeon : MonoBehaviour
         //print(area);
         //print("----");
         Rect[] areas = new Rect[2];
-        bool isHeightMax = area.height > area.width;
-        float half;
+        bool isHeightMax = area.height >= area.width;
+        float half, bottom, top;
         //float divider = Random.Range(0.3f, 0.7f);
         float divider = 0.5f;
         if (isHeightMax)
         {
             print("split by height (horizontal)");
             half = Mathf.FloorToInt(area.height * divider);
+            bottom = half;
+            top = area.height - half;
+
             areas[0].x = area.x;
             areas[0].y = area.y;
-            areas[0].height = half;
+            areas[0].height = bottom;
             areas[0].width = area.width;
 
             areas[1].x = area.x;
-            areas[1].y = half + 1;
-            areas[1].height = half;
+            areas[1].y = half;
+            areas[1].height = top;
             areas[1].width = area.width;
         }
         else
         {
             print("split by width (vertical)");
             half = Mathf.FloorToInt(area.width * divider);
+            bottom = half;
+            top = area.width - half;
             areas[0].x = area.x;
             areas[0].y = area.y;
             areas[0].height = area.height;
-            areas[0].width = half;
+            areas[0].width = bottom;
 
-            areas[1].x = half + 1;
+            areas[1].x = half;
             areas[1].y = area.y;
             areas[1].height = area.height;
-            areas[1].width = half;
+            areas[1].width = top;
         }
         print("area 0: " + areas[0].ToString());
         print("area 1: " + areas[1].ToString());
