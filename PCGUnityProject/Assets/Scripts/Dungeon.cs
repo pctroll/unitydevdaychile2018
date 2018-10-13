@@ -20,7 +20,7 @@ public class Dungeon : MonoBehaviour
     public Dictionary<int, List<BSPNode>> tree;
     public HashSet<BSPNode> leaves;
 
-    public delegate Rect[] Split(Rect area);
+    public delegate Blob Split(Rect area);
     public Split splitCall;
 
     public BSPNode root;
@@ -30,12 +30,19 @@ public class Dungeon : MonoBehaviour
 
     public void Init()
     {
+        print("Dungeon.Init");
         area = new Rect(0f, 0f, maxWidth, maxHeight);
         grid = new int[maxHeight, maxWidth];
+        // int i, j;
+        // for (i = 0; i < maxHeight; i++)
+        // {
+        //     for (j = 0; j < maxWidth; j++)
+        //         grid[i, j] = 0;
+        // }
         //leaves.Clear();
-        tree.Clear();
+        // tree.Clear();
         if (splitCall == null)
-            splitCall = SplitNode;
+            splitCall = SplitArea;
         root = new BSPNode(area, this);
     }
 
@@ -48,6 +55,40 @@ public class Dungeon : MonoBehaviour
         print("block");
         print(node.block);
         BlockToGrid(node.block);
+    }
+
+    public void BindBlocks(Rect a, Rect b, SplitType split)
+    {
+        print("BindBlocks");
+        int originX, originY, targetX, targetY;
+        originX = (int)Random.Range(a.xMin + 1, a.xMax - 1);
+        originY = (int)Random.Range(a.yMin + 1, a.yMax - 1);
+        if (split == SplitType.Horizontal)
+        {
+            targetX = originX;
+            targetY = (int)b.center.y;
+        }
+        else
+        {
+            targetX = (int)b.center.x;
+            targetY = originY;
+        }
+        print("origin: (" + originX + "," + originY + ")");
+        print("target: (" + targetX + "," + targetY + ")");
+
+        int i, j;
+        for (i = originY; i <= targetY; i++)
+        {
+            // print("i: " + i);
+            for (j = originX; j <= targetX; j++)
+            {
+                // print("j: " + j);
+                // print("(" + j + "," + i + ")");
+                if (grid[i,j] == 0)
+                    grid[i, j] = 1;
+            }
+        }
+
     }
 
     public void BlockToGrid(Rect block)
@@ -79,7 +120,7 @@ public class Dungeon : MonoBehaviour
         leaves = new HashSet<BSPNode>();
     }
 
-    public Rect[] SplitNode(Rect area)
+    public Blob SplitArea(Rect area)
     {
         int val = (int)Mathf.Min(area.width, area.height);
         //print("minAcceptsize " + minAcceptSize);
@@ -92,13 +133,15 @@ public class Dungeon : MonoBehaviour
         //print(area);
         //print("----");
         Rect[] areas = new Rect[2];
-        bool isHeightMax = area.height >= area.width;
+        bool isHeightMax = area.height > area.width;
         float half, bottom, top;
         //float divider = Random.Range(0.3f, 0.7f);
         float divider = 0.5f;
+        Blob blob = new Blob();
         if (isHeightMax)
         {
-            print("split by height (horizontal)");
+            // print("split by height (horizontal)");
+            blob.splitType = SplitType.Horizontal;
             half = Mathf.FloorToInt(area.height * divider);
             bottom = half;
             top = area.height - half;
@@ -115,7 +158,8 @@ public class Dungeon : MonoBehaviour
         }
         else
         {
-            print("split by width (vertical)");
+            // print("split by width (vertical)");
+            blob.splitType = SplitType.Vertical;
             half = Mathf.FloorToInt(area.width * divider);
             bottom = half;
             top = area.width - half;
@@ -131,10 +175,10 @@ public class Dungeon : MonoBehaviour
         }
         print("area 0: " + areas[0].ToString());
         print("area 1: " + areas[1].ToString());
-        return areas;
+        blob.areaLeft = areas[0];
+        blob.areaRight = areas[1];
+        return blob;
     }
-
-
 
     private void Start()
     {

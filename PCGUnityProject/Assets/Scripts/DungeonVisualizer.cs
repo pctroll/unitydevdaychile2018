@@ -38,6 +38,7 @@ public class DungeonVisualizer : MonoBehaviour
                 position.y = (i * -cellSize.y);
                 obj.transform.position = position;
                 obj.name = "Cell_" + counter;
+                cellList.Add(obj);
                 counter++;
             }
         }
@@ -48,12 +49,13 @@ public class DungeonVisualizer : MonoBehaviour
     /// </summary>
     private void Clear()
     {
+        print("Visualizer.Clear");
         if (cellList == null || cellList.Count == 0)
             return;
         foreach (GameObject obj in cellList)
         {
             obj.transform.parent = null;
-            Destroy(obj);
+            DestroyImmediate(obj);
         }
         cellList.Clear();
     }
@@ -63,6 +65,7 @@ public class DungeonVisualizer : MonoBehaviour
     {
         //int[,] tempGrid = new int[,] { { 1, 1, 1 }, { 1, 0, 1 }, { 1, 1, 1 } };
         //Render(tempGrid);
+        cellList = new List<GameObject>();
         _dungeon.Init();
         _dungeon.Build();
         Render(_dungeon.grid);
