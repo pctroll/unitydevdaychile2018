@@ -63,6 +63,12 @@ public class DungeonVisualizer : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Rect r = new Rect();
+        r.xMin = 1;
+        r.xMax = 3;
+        r.yMin = 1;
+        r.yMax = 3;
+        print("r: " + r.ToString());
         //int[,] tempGrid = new int[,] { { 1, 1, 1 }, { 1, 0, 1 }, { 1, 1, 1 } };
         //Render(tempGrid);
         cellList = new List<GameObject>();

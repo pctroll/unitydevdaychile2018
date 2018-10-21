@@ -8,57 +8,53 @@ public class BSPNode
     public Rect block;
     public BSPNode left;
     public BSPNode right;
+    public int type;
+
+    public static int cutVal = 10;
 
     //public int depth;
 
-    public BSPNode(Rect area, Dungeon root, int depth = 0)
+    public BSPNode(Rect area, Dungeon dungeon, int type = 1)
     {
         this.area = area;
-        this.dungeon = root;
+        this.dungeon = dungeon;
+        //Debug.Log("type: " + type);
+        this.type = Mathf.Clamp(type, 1, 3);
     }
 
     public void Split(Dungeon.Split splitCall)
     {
+        //int val = (int)(Mathf.Max(area.width, area.height));
+        //if (val < cutVal)
         Blob b = splitCall(area);
         if (b == null)
         {
-            // Debug.Log("areas are NULL | Creating block...");
+            Debug.Log("No need to cut");
             block = CreateBlock(area);
-            dungeon.BlockToGrid(block);
+            dungeon.BlockToGrid(this);
+            //dungeon.BlockToGrid(block);
             return;
         }
-        //Debug.Log("area 0: " + areas[0].ToString());
-        //Debug.Log("area 1: " + areas[1].ToString());
-        // Debug.Log("Creating new nodes");
+        //Debug.Log("Cutting");
+        //Blob b = splitCall(area);
         left = new BSPNode(b.areaLeft, dungeon);
         right = new BSPNode(b.areaRight, dungeon);
         left.Split(splitCall);
         right.Split(splitCall);
-        dungeon.BindBlocks(left.area, right.area, b.splitType);
+        //dungeon.BindBlocks(left.area, right.area, b.splitType);
     }
 
     public static Rect CreateBlock(Rect area)
     {
-        Rect block = new Rect();
-        block.x = area.x + 1;
-        block.y = area.y + 1;
-        block.width = area.width - 1;
-        block.height = area.height - 1;
+        Rect block = new Rect
+        {
+            xMin = area.xMin + 1,
+            yMin = area.yMin + 1,
+            xMax = area.xMax - 1,
+            yMax = area.yMax - 1
+        };
         return block;
     }
-
-    // public static Blob SplitNode(BSPNode node)
-    // {
-    //     Rect area = node.area;
-    //     int val = (int)Mathf.Min(area.width, area.height);
-    //     if (val < minAccecptedSize)
-    //         return null;
-    //     Rect[] areas = new Rect[2];
-    //     bool isHeightMax = area.height > area.width;
-    //     float cut, bottom, top;
-
-    //     return blob;
-    // }
 
 }
 

@@ -30,51 +30,39 @@ public class Dungeon : MonoBehaviour
 
     public void Init()
     {
+        BSPNode.cutVal = minAcceptSize;
         print("Dungeon.Init");
-        area = new Rect(0f, 0f, maxWidth, maxHeight);
+        area = new Rect();
+        area.xMin = area.yMin = 0;
+        area.xMax = maxWidth;
+        area.yMax = maxHeight;
         grid = new int[maxHeight, maxWidth];
-        // int i, j;
-        // for (i = 0; i < maxHeight; i++)
-        // {
-        //     for (j = 0; j < maxWidth; j++)
-        //         grid[i, j] = 0;
-        // }
-        //leaves.Clear();
-        // tree.Clear();
         if (splitCall == null)
             splitCall = SplitArea;
         root = new BSPNode(area, this);
     }
 
-    public void BlockToGrid(BSPNode node)
-    {
-        print("-------------");
-        print("BlockToGrid");
-        print("area");
-        print(node.area);
-        print("block");
-        print(node.block);
-        BlockToGrid(node.block);
-    }
 
     public void BindBlocks(Rect a, Rect b, SplitType split)
     {
-        print("BindBlocks");
+        //print("BindBlocks");
         int originX, originY, targetX, targetY;
-        originX = (int)Random.Range(a.xMin + 1, a.xMax - 1);
-        originY = (int)Random.Range(a.yMin + 1, a.yMax - 1);
         if (split == SplitType.Horizontal)
         {
+            originX = (int)Random.Range(a.xMin + 1, a.xMax - 1);
+            originY = (int)a.center.x;
             targetX = originX;
             targetY = (int)b.center.y;
         }
         else
         {
+            originX = (int)a.center.x;
+            originY = (int)Random.Range(a.yMin + 1, a.yMax - 1);
             targetX = (int)b.center.x;
             targetY = originY;
         }
-        print("origin: (" + originX + "," + originY + ")");
-        print("target: (" + targetX + "," + targetY + ")");
+        //print("origin: (" + originX + "," + originY + ")");
+        //print("target: (" + targetX + "," + targetY + ")");
 
         int i, j;
         for (i = originY; i <= targetY; i++)
@@ -91,27 +79,37 @@ public class Dungeon : MonoBehaviour
 
     }
 
-    public void BlockToGrid(Rect block)
+    public void BlockToGrid(BSPNode node)
     {
+        print("-------------");
+        print("BlockToGrid");
+        print("area");
+        Rect area = node.area;
+        Rect block = node.block;
+        print(area);
+        print("xMin:" + area.xMin + ", yMin:" + area.yMin + ", xMax:" + area.xMax + ", yMax:" + area.yMax);
+        print("block");
+        print(node.block);
+        print("xMin:" + block.xMin + ", yMin:" + block.yMin + ", xMax:" + block.xMax + ", yMax:" + block.yMax);
         int i, j, w, h;
-        w = (int)(block.width + block.x);
-        h = (int)(block.height + block.y);
+        w = (int)node.block.xMax;
+        h = (int)node.block.yMax;
         //print("i:" + (int)block.y + " j:" + (int)block.x + " w:" + w + " h:" + h);
-        for (i = (int)block.y; i < h - 1; i++)
+        for (i = (int)node.block.yMin; i < h; i++)
         {
-            for (j = (int)block.x; j < w - 1; j++)
+            for (j = (int)node.block.xMin; j < w; j++)
             {
-                grid[i, j] = 1;
+                grid[i, j] = node.type;
+                //print("x:" + j + ", y:" + i + " - " + node.type);
             }
         }
     }
+
 
     public void Build()
     {
         Init();
         root.Split(splitCall);
-        //foreach (BSPNode node in leaves)
-        //    node.CreateBlock();
     }
 
     private void Awake()
@@ -122,56 +120,58 @@ public class Dungeon : MonoBehaviour
 
     public Blob SplitArea(Rect area)
     {
+        //print("SplitArea");
         int val = (int)Mathf.Min(area.width, area.height);
-        //print("minAcceptsize " + minAcceptSize);
-        //print("val " + val);
+        print("area: " + area);
+        Debug.Log("val: " + val);
+        Debug.Log("min: " + minAcceptSize);
         if (val < minAcceptSize)
+        {
+            print("stop splitting");
             return null;
-
+        }
+        print("start splitting");
         //print("SplittingNode");
         //print("area");
         //print(area);
         //print("----");
         Rect[] areas = new Rect[2];
         bool isHeightMax = area.height > area.width;
-        float half, bottom, top;
-        //float divider = Random.Range(0.3f, 0.7f);
-        float divider = 0.5f;
+        float divider, cut;//, cutTop;
+        divider = Random.Range(0.25f, 0.75f);
+        //divider = 0.5f;
         Blob blob = new Blob();
         if (isHeightMax)
         {
-            // print("split by height (horizontal)");
             blob.splitType = SplitType.Horizontal;
-            half = Mathf.FloorToInt(area.height * divider);
-            bottom = half;
-            top = area.height - half;
+            cut = Mathf.FloorToInt(area.height * divider);
+            //cutTop = Mathf.CeilToInt(area.height * divider);
 
             areas[0].x = area.x;
             areas[0].y = area.y;
-            areas[0].height = bottom;
+            areas[0].height = cut;
             areas[0].width = area.width;
 
             areas[1].x = area.x;
-            areas[1].y = half;
-            areas[1].height = top;
+            areas[1].y = cut;
+            areas[1].height = area.height - cut;
             areas[1].width = area.width;
         }
         else
         {
-            // print("split by width (vertical)");
             blob.splitType = SplitType.Vertical;
-            half = Mathf.FloorToInt(area.width * divider);
-            bottom = half;
-            top = area.width - half;
+            cut = Mathf.FloorToInt(area.width * divider);
+            //cutTop = Mathf.CeilToInt(area.width * divider);
+
             areas[0].x = area.x;
             areas[0].y = area.y;
             areas[0].height = area.height;
-            areas[0].width = bottom;
+            areas[0].width = cut;
 
-            areas[1].x = half;
+            areas[1].x = cut;
             areas[1].y = area.y;
             areas[1].height = area.height;
-            areas[1].width = top;
+            areas[1].width = area.width - cut;
         }
         print("area 0: " + areas[0].ToString());
         print("area 1: " + areas[1].ToString());

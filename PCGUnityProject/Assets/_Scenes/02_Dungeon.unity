@@ -141,9 +141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed5c97ca2112d140a194d9878ecee64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHeight: 30
-  maxWidth: 30
-  minAcceptSize: 10
+  maxHeight: 29
+  maxWidth: 29
+  minAcceptSize: 15
 --- !u!114 &1298147037
 MonoBehaviour:
   m_ObjectHideFlags: 0
