@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHeight: 29
   maxWidth: 29
-  minAcceptSize: 15
+  minAcceptSize: 25
 --- !u!114 &1298147037
 MonoBehaviour:
   m_ObjectHideFlags: 0

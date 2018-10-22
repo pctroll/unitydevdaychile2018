@@ -101,7 +101,7 @@ public class Dungeon : MonoBehaviour
         {
             for (j = x; j < w; j++)
             {
-                grid[i, j] = node.type;
+                grid[i, j] = 1;
                 //print("x:" + j + ", y:" + i + " - " + node.type);
             }
         }
@@ -111,7 +111,21 @@ public class Dungeon : MonoBehaviour
     public void Build()
     {
         Init();
-        root.Split(splitCall);
+        root.Split();
+        Raster(root);
+    }
+
+    private void Raster(BSPNode node)
+    {
+        if (node == null)
+            return;
+        if (node.Type == BSPNodeType.Leaf)
+        {
+            BlockToGrid(node);
+            return;
+        }
+        Raster(node.left);
+        Raster(node.right);
     }
 
     private void Awake()
