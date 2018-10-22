@@ -11,5 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ff151923be7a5a40b656024904d358e, type: 3}
   m_Name: LevelTileStore
   m_EditorClassIdentifier: 
-  spriteReference: {fileID: 0}
-  spriteList: []
+  spriteReference: {fileID: 21300000, guid: 385242a541dde444fa53d51a050d935b, type: 3}
+  spriteList:
+  - {fileID: 21300000, guid: 385242a541dde444fa53d51a050d935b, type: 3}
+  - {fileID: 21300000, guid: 090d685abb3b62249a6081951c14f33c, type: 3}
