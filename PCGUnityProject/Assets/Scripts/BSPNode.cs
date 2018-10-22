@@ -48,10 +48,10 @@ public class BSPNode
     {
         Rect block = new Rect
         {
-            xMin = area.xMin + 1,
-            yMin = area.yMin + 1,
-            xMax = area.xMax - 1,
-            yMax = area.yMax - 1
+            xMin = area.xMin + 1f,
+            yMin = area.yMin + 1f,
+            xMax = area.xMax - 1f,
+            yMax = area.yMax - 1f
         };
         return block;
     }

@@ -91,13 +91,15 @@ public class Dungeon : MonoBehaviour
         print("block");
         print(node.block);
         print("xMin:" + block.xMin + ", yMin:" + block.yMin + ", xMax:" + block.xMax + ", yMax:" + block.yMax);
-        int i, j, w, h;
+        int i, j, x, y, w, h;
+        x = (int)node.block.xMin;
+        y = (int)node.block.yMin;
         w = (int)node.block.xMax;
         h = (int)node.block.yMax;
         //print("i:" + (int)block.y + " j:" + (int)block.x + " w:" + w + " h:" + h);
-        for (i = (int)node.block.yMin; i < h; i++)
+        for (i = y; i < h; i++)
         {
-            for (j = (int)node.block.xMin; j < w; j++)
+            for (j = x; j < w; j++)
             {
                 grid[i, j] = node.type;
                 //print("x:" + j + ", y:" + i + " - " + node.type);
@@ -121,30 +123,30 @@ public class Dungeon : MonoBehaviour
     public Blob SplitArea(Rect area)
     {
         //print("SplitArea");
-        int val = (int)Mathf.Min(area.width, area.height);
-        print("area: " + area);
-        Debug.Log("val: " + val);
-        Debug.Log("min: " + minAcceptSize);
+        int val = (int)Mathf.Max(area.width, area.height);
+        // print("area: " + area);
+        // Debug.Log("val: " + val);
+        // Debug.Log("min: " + minAcceptSize);
         if (val < minAcceptSize)
         {
-            print("stop splitting");
+            // print("stop splitting");
             return null;
         }
-        print("start splitting");
+        // print("start splitting");
         //print("SplittingNode");
         //print("area");
         //print(area);
         //print("----");
         Rect[] areas = new Rect[2];
-        bool isHeightMax = area.height > area.width;
+        bool isHeightMax = area.height >= area.width;
         float divider, cut;//, cutTop;
-        divider = Random.Range(0.25f, 0.75f);
-        //divider = 0.5f;
+        divider = Random.Range(0.4f, 0.6f);
+        divider = 0.5f;
         Blob blob = new Blob();
         if (isHeightMax)
         {
             blob.splitType = SplitType.Horizontal;
-            cut = Mathf.FloorToInt(area.height * divider);
+            cut = Mathf.RoundToInt(area.height * divider);
             //cutTop = Mathf.CeilToInt(area.height * divider);
 
             areas[0].x = area.x;
@@ -153,7 +155,7 @@ public class Dungeon : MonoBehaviour
             areas[0].width = area.width;
 
             areas[1].x = area.x;
-            areas[1].y = cut;
+            areas[1].y = cut+1;
             areas[1].height = area.height - cut;
             areas[1].width = area.width;
         }
@@ -168,7 +170,7 @@ public class Dungeon : MonoBehaviour
             areas[0].height = area.height;
             areas[0].width = cut;
 
-            areas[1].x = cut;
+            areas[1].x = cut=1;
             areas[1].y = area.y;
             areas[1].height = area.height;
             areas[1].width = area.width - cut;
@@ -180,8 +182,5 @@ public class Dungeon : MonoBehaviour
         return blob;
     }
 
-    private void Start()
-    {
-        
-    }
+
 }
