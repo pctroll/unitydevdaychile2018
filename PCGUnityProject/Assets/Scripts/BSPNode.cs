@@ -42,8 +42,11 @@ public class BSPNode
 
     public void Split()
     {
-        int min = (int)Mathf.Min(area.width, area.height);
-        if (min <= cutVal)
+        Debug.Log("w:" + area.width + "  h:" + area.height);
+        int max = (int)Mathf.Max(area.width, area.height);
+        Debug.Log("min: " + max);
+        Debug.Log("cutVal:" + cutVal);
+        if (max <= cutVal)
         {
             _type = BSPNodeType.Leaf;
             block = CreateBlock(area);
@@ -93,8 +96,10 @@ public class BSPNode
 
         left = new BSPNode(areas[0], dungeon);
         right = new BSPNode(areas[1], dungeon);
-        left.Split();
-        right.Split();
+        // left.Split();
+        // right.Split();
+        dungeon.AddNode(left);
+        dungeon.AddNode(right);
     }
 
     // public void Split(Dungeon.Split splitCall)

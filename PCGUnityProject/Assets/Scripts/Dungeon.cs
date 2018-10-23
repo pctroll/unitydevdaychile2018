@@ -27,22 +27,26 @@ public class Dungeon : MonoBehaviour
 
     public int[,] grid;
 
+    private Queue<BSPNode> _queue;
 
     public void Init()
     {
         BSPNode.cutVal = minAcceptSize;
-        print("Dungeon.Init");
+        // print("Dungeon.Init");
         area = new Rect();
-        area.xMin = area.yMin = 0;
+        area.xMin = 0;
+        area.yMin = 0;
         area.xMax = maxWidth;
         area.yMax = maxHeight;
         grid = new int[maxHeight, maxWidth];
-        if (splitCall == null)
-            splitCall = SplitArea;
         root = new BSPNode(area, this);
+        _queue = new Queue<BSPNode>();
     }
 
-
+    public void AddNode(BSPNode node)
+    {
+        _queue.Enqueue(node);
+    }
     public void BindBlocks(Rect a, Rect b, SplitType split)
     {
         //print("BindBlocks");
@@ -81,16 +85,16 @@ public class Dungeon : MonoBehaviour
 
     public void BlockToGrid(BSPNode node)
     {
-        print("-------------");
-        print("BlockToGrid");
-        print("area");
+        // print("-------------");
+        // print("BlockToGrid");
+        // print("area");
         Rect area = node.area;
         Rect block = node.block;
-        print(area);
-        print("xMin:" + area.xMin + ", yMin:" + area.yMin + ", xMax:" + area.xMax + ", yMax:" + area.yMax);
-        print("block");
-        print(node.block);
-        print("xMin:" + block.xMin + ", yMin:" + block.yMin + ", xMax:" + block.xMax + ", yMax:" + block.yMax);
+        // print(area);
+        // print("xMin:" + area.xMin + ", yMin:" + area.yMin + ", xMax:" + area.xMax + ", yMax:" + area.yMax);
+        // print("block");
+        // print(node.block);
+        // print("xMin:" + block.xMin + ", yMin:" + block.yMin + ", xMax:" + block.xMax + ", yMax:" + block.yMax);
         int i, j, x, y, w, h;
         x = (int)node.block.xMin;
         y = (int)node.block.yMin;
@@ -111,15 +115,20 @@ public class Dungeon : MonoBehaviour
     public void Build()
     {
         Init();
-        root.Split();
-        Raster(root);
+        _queue.Enqueue(root);
+        while (_queue.Count != 0)
+        {
+            BSPNode n = _queue.Dequeue();
+            n.Split();
+        }
+        // Raster(root);
     }
 
     private void Raster(BSPNode node)
     {
         if (node == null)
             return;
-        if (node.Type == BSPNodeType.Leaf)
+        if (node.left == null && node.right == null)
         {
             BlockToGrid(node);
             return;
